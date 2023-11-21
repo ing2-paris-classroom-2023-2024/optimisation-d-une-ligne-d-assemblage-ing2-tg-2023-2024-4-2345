@@ -194,8 +194,8 @@ void graphe_afficher(Graphe* graphe)
 
 }
 
-int exclusions(){
-    Graphe * g;
+Graphe * exclusions(Graphe* g){
+
 
     g = lire_graphe("../exclusions.txt");
 
@@ -212,5 +212,5 @@ int exclusions(){
     free(g->pSommet);
     free(g);
 
-    return 0;
+    return g;
 }

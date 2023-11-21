@@ -39,7 +39,15 @@ typedef struct Graphe
     pSommet* pSommet;
 } Graphe;
 
+/* Graphe pour les usines*/
+typedef struct Usine{
+    int nbUsine;
+    pSommet* pSommet;
+    struct Usine* Usine_suivante;
+} Usine;
+
 ///Ajout des fonction pour les utiliser dans les autres fichier.
 
 int taille_fichier(char* nomfichier);
-int exclusions();
+Graphe * exclusions(Graphe* g);
+void repartition_2_1(Graphe* g);
