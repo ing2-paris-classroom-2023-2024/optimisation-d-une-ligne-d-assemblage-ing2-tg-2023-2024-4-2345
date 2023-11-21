@@ -42,4 +42,4 @@ typedef struct Graphe
 ///Ajout des fonction pour les utiliser dans les autres fichier.
 
 int taille_fichier(char* nomfichier);
-
+int exclusions();
