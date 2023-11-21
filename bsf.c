@@ -125,7 +125,7 @@ void afficherJeux(t_Graphe *pt) {
 
 #endif //TP1_HEADER_H
 
-int main() {
+int main_BFS() {
     char nom[60];
     t_Graphe* pt;
     pt = (t_Graphe*) malloc(sizeof (t_Graphe));
