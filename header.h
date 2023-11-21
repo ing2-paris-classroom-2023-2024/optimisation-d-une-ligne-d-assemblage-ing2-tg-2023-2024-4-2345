@@ -36,4 +36,8 @@ typedef struct Graphe
     pSommet* pSommet;
 } Graphe;
 
+///Ajout des fonction pour les utiliser dans les autres fichier.
+
+int taille_fichier(char* nomfichier);
+
 #endif // HEADER_H_INCLUDED
