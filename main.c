@@ -1,5 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
+#include "header.h"
 
 /// Fonction qui renvoi le nombre de ligne d'un fichier .txt
 int taille_fichier(char* nomfichier){
