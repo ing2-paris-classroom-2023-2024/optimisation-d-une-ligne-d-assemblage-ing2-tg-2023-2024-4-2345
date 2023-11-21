@@ -1,4 +1,5 @@
 #include "header.h"
+int taille_fichier(char* nomfichier);
 int main() {
     int nbLignes_exclusions = taille_fichier("../exclusions.txt");
     int nbLignes_operations = taille_fichier("../operations.txt");
