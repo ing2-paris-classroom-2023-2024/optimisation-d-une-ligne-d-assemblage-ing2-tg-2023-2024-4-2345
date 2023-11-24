@@ -23,7 +23,7 @@ struct Sommet
 {
     struct Arc* arc;
     int valeur;
-    char couleur;
+    int couleur;
 
 };
 

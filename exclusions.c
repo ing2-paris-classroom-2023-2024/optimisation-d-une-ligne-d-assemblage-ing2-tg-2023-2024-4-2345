@@ -3,7 +3,7 @@
 /* affichage des successeurs du sommet num*/
 void afficher_successeurs(Graphe* graphe, int num)
 {
-    printf(" sommet %d :\n", graphe->pSommet[num]->valeur);
+    printf(" sommet %d , couleur %d:\n", graphe->pSommet[num]->valeur, graphe->pSommet[num]->couleur);
 
     pArc arc = graphe->pSommet[num]->arc;
 
@@ -194,12 +194,56 @@ void graphe_afficher(Graphe* graphe)
 
 }
 
-Graphe * exclusions(Graphe* g){
 
+// Fonction pour obtenir l'indice du sommet dans le tableau pSommet de Graphe
+int obtenirIndiceSommet(Graphe *graphe, int valeurSommet){
+    for (int i = 0; i < graphe->ordre; i++) {
+        if (graphe->pSommet[i]->valeur == valeurSommet) {
+            return i;
+        }
+    }
+}
+
+// Fonction pour vérifier si la couleur peut être utilisée pour un sommet donné
+int estCouleurValide(Graphe *graphe, int sommetIndex, int couleur){
+    pArc arc = graphe->pSommet[sommetIndex]->arc;
+    while (arc != NULL) {
+        int indiceVoisin = obtenirIndiceSommet(graphe, arc->sommet);
+        if (indiceVoisin != -1 && graphe->pSommet[indiceVoisin]->couleur == couleur) {
+            return 0;
+        }
+        arc = arc->arc_suivant;
+    }
+    return 1;
+}
+
+//  coloration de graphe avec naïve
+void ColorisationNaive(Graphe *graphe){
+
+    // Initialisation des couleurs à -1
+    for (int i = 0; i < graphe->ordre; i++) {
+        graphe->pSommet[i]->couleur = -1;
+    }
+
+    // Colorer chaque sommet
+    for (int i = 0; i < graphe->ordre; i++) {
+        int couleur;
+
+        for (couleur = 0; couleur < graphe->ordre; couleur++) {
+            if (estCouleurValide(graphe, i, couleur)) {
+                break;
+            }
+        }
+        graphe->pSommet[i]->couleur = couleur;
+         }
+}
+
+
+Graphe * exclusions(Graphe* g){
 
     g = lire_graphe("../exclusions.txt");
 
-
+    ColorisationNaive(g);
     /// afficher le graphe
     graphe_afficher(g);
 

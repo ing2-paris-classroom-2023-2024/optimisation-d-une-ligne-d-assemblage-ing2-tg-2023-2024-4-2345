@@ -7,7 +7,9 @@ int main() {
 
     g_exclusions = exclusions(g_exclusions);
 
-    repartition_2_1(g_exclusions);
+
+
+   // repartition_2_1(g_exclusions);
 
     //on suprime la mémoire alloué dinamiquement
     for (int i = 0; i < g_exclusions->ordre; ++i) {
