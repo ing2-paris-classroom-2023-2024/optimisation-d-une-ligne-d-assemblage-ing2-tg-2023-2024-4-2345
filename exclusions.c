@@ -145,7 +145,7 @@ Graphe * lire_graphe(char * nomFichier)
 
     fclose(ifs);
 
-    graphe=CreerGraphe(ordre, taille, orientation, ifs , nomFichier); // créer le graphe d'ordre sommets avec les bons numéros
+    graphe = CreerGraphe(ordre, taille, orientation, ifs , nomFichier); // créer le graphe d'ordre sommets avec les bons numéros
 
     /// on réouvre le fichier car il a totalement était lus puis fermé dans la fonction CreerGraphe
     ifs = fopen(nomFichier,"r");
@@ -170,6 +170,7 @@ Graphe * lire_graphe(char * nomFichier)
     fclose(ifs);
     return graphe;
 }
+
 
 /*affichage du graphe avec les successeurs de chaque sommet */
 void graphe_afficher(Graphe* graphe)
@@ -201,15 +202,6 @@ Graphe * exclusions(Graphe* g){
 
     /// afficher le graphe
     graphe_afficher(g);
-
-
-    //on suprime la mémoire alloué dinamiquement
-    for (int i = 0; i < g->ordre; ++i) {
-        free(g->pSommet[i]->arc);
-        free(g->pSommet[i]);
-    }
-    free(g->pSommet);
-    free(g);
 
     return g;
 }

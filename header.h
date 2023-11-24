@@ -42,7 +42,7 @@ typedef struct Graphe
 /* Graphe pour les usines*/
 typedef struct Usine{
     int Num_Usine;
-    int Nb_Somment;
+    int Nb_Sommet;
     pSommet* pSommet;
     struct Usine* Usine_suivante;
 } Usine;
