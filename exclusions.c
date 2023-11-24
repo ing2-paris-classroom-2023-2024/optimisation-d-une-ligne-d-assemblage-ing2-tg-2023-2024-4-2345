@@ -121,7 +121,6 @@ Graphe* CreerGraphe(int ordre, int taille, int orientation, FILE * ifs, char * n
             }
         }
     }
-    printf("Il y a %d sommet(s) isole(s) on change l'ordre du graphe a %d pour simplifier\n", (Newgraphe->ordre - j), j);
     Newgraphe->ordre = j;
 
     fclose(ifs);
