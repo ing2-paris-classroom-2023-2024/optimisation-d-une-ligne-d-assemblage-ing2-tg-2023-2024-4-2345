@@ -139,3 +139,5 @@ int main_BFS() {
     afficherJeux(pt);
     return 0;
 }
+
+// ajoutez le DSF en cas de besoin (parcours en largeur) 
