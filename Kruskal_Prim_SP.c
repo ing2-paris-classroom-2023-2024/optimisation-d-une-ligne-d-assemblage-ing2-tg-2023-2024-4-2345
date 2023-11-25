@@ -127,3 +127,61 @@ void kruskal(Graphe *graphe, char nomsSommets[][20]) {
     free(ensembles);
 }
 
+
+// Fonction pour l'algorithme de Prim
+void Prim(Graphe *graphe) {
+    int *parent = (int *)malloc(graphe->numSommets * sizeof(int));
+    int *cle = (int *)malloc(graphe->numSommets * sizeof(int));
+    int *dansARM = (int *)malloc(graphe->numSommets * sizeof(int));
+
+    for (int i = 0; i < graphe->numSommets; i++) {
+        parent[i] = -1;
+        dansARM[i] = 0;
+        cle[i] = INT_MAX;
+    }
+
+    cle[0] = 0; // On choisi le premier sommet comme notre point de depart
+
+    for (int count = 0; count < graphe->numSommets - 1; count++) {
+        int cleMin = INT_MAX;
+        int u = -1;
+
+        for (int v = 0; v < graphe->numSommets; v++) {
+            if (!dansARM[v] && cle[v] < cleMin) {
+                cleMin = cle[v];
+                u = v;
+            }
+        }
+
+        dansARM[u] = 1; // Ajoute u a l'arbre
+
+        for (int v = 0; v < graphe->numSommets; v++) {
+            for (int i = 0; i < graphe->numAretes; i++) {
+                AretePrim arete = graphe->aretes[i];
+                int sommet1 = arete.sommet1;
+                int sommet2 = arete.sommet2;
+
+                if ((sommet1 == u && sommet2 == v) || (sommet1 == v && sommet2 == u)) {
+                    int poids = arete.poids;
+                    if (!dansARM[v] && poids < cle[v]) {
+                        parent[v] = u;
+                        cle[v] = poids;
+                    }
+                }
+            }
+        }
+    }
+
+    // On affiche l'arbre couvrant de poids minimal
+    int somme = 0;
+    printf("Arbre couvrant de poids minimal (Prim) :\n");
+    for (int i = 1; i < graphe->numSommets; i++) {
+        printf("%d <--[%d]--> %d\n", parent[i],cle[i],i);
+        somme += cle[i];
+    }
+    printf("Poids total de l'arbre couvrant : [%d]\n\n\n", somme);
+
+    free(parent);
+    free(cle);
+    free(dansARM);
+}
