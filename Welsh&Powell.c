@@ -91,6 +91,59 @@ int main() {
 
     return 0;
 }
+#include "header.h"
+
+/* affichage des successeurs du sommet num*/
+void afficher_successeurs(Graphe* graphe, int num)
+{
+    printf(" sommet %d , couleur %d:\n", graphe->pSommet[num]->valeur, graphe->pSommet[num]->couleur);
+
+    pArc arc = graphe->pSommet[num]->arc;
+
+    while(arc!=NULL)
+    {
+        printf("%d ",arc->sommet);
+        arc = arc->arc_suivant;
+    }
+
+}
+
+///Cette fonction remplace CreerArete car elle ne fonctionnais pas bien.
+void CreerLiaison(Graphe* graphe, int s1, int s2){
+    int i_s1 = -1;
+    int i_s2 = -1;
+
+    //On trouve le sommet qui a pour valeur S1 puis S2
+    for (int i = 0; i < graphe->ordre; i++) {
+        if (graphe->pSommet[i]->valeur == s1) {
+            i_s1 = i;
+        }
+
+        if (graphe->pSommet[i]->valeur == s2) {
+            i_s2 = i;
+        }
+
+        // Si les deux sommets sont trouvés, on sort de la boucle
+        if (i_s1 != -1 && i_s2 != -1) {
+            break;
+        }
+    }
+
+    // Création de la liaison
+    pArc nouvelle_liaison = (pArc)malloc(sizeof(struct Arc));
+    nouvelle_liaison->sommet = s2;
+    nouvelle_liaison->arc_suivant = graphe->pSommet[i_s1]->arc;
+    graphe->pSommet[i_s1]->arc = nouvelle_liaison;
+
+    // Si le graphe n'est pas orienté, on crée également la liaison dans l'autre sens
+    if (!graphe->orientation) {
+        pArc nouvelle_liaison_inverse = (pArc)malloc(sizeof(struct Arc));
+        nouvelle_liaison_inverse->sommet = s1;
+        nouvelle_liaison_inverse->arc_suivant = graphe->pSommet[i_s2]->arc;
+        graphe->pSommet[i_s2]->arc = nouvelle_liaison_inverse;
+    }
+}
+
 // créer le graphe
 ///Le code a été changé de façon à régler le problème des numéro qui n'existe pas
 ///ou ce qui existe mais qui ont une valeur supérieur à celle de l'ordre du graphe
