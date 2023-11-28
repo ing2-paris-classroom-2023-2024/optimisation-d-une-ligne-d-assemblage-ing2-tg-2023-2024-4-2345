@@ -24,6 +24,7 @@ struct Sommet
     struct Arc* arc;
     int valeur;
     int couleur;
+    float temps;
 
 };
 
@@ -51,4 +52,10 @@ typedef struct Usine{
 
 int taille_fichier(char* nomfichier);
 Graphe * exclusions(Graphe* g);
+Graphe * precedences(Graphe* g);
+void renseigner_temps(Graphe * g);
+int obtenirIndiceSommet(Graphe *graphe, int valeurSommet);
+Graphe * lire_graphe(char * nomFichier);
+void graphe_afficher(Graphe* graphe);
 void repartition_2_1(Graphe* g);
+void repartition_2_2(Graphe* g);

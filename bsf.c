@@ -8,7 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#BSF permettant le parcours de la ligne d'assemblage en profondeur EX arbre poids minimal
+//BSF permettant le parcours de la ligne d'assemblage en profondeur EX arbre poids minimal
 typedef struct Sommet {
     char *nom;
     int numero;
