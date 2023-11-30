@@ -23,9 +23,8 @@ struct Sommet
 {
     struct Arc* arc;
     int valeur;
-    int couleur;
     float temps;
-
+    int couleur;
 };
 
 /* Alias de pointeur sur un Sommet */
@@ -42,8 +41,8 @@ typedef struct Graphe
 
 /* Graphe pour les usines*/
 typedef struct Usine{
-    int Num_Usine;
-    int Nb_Sommet;
+    int num_Usine;
+    int nb_Usines;
     pSommet* pSommet;
     struct Usine* Usine_suivante;
 } Usine;
@@ -53,9 +52,13 @@ typedef struct Usine{
 int taille_fichier(char* nomfichier);
 Graphe * exclusions(Graphe* g);
 Graphe * precedences(Graphe* g);
-void renseigner_temps(Graphe * g);
 int obtenirIndiceSommet(Graphe *graphe, int valeurSommet);
 Graphe * lire_graphe(char * nomFichier);
 void graphe_afficher(Graphe* graphe);
-void repartition_2_1(Graphe* g);
-void repartition_2_2(Graphe* g);
+void afficher_successeurs(Graphe* graphe, int sommet);
+int* BFS(Graphe* g, int sommet_initial, int couleur);
+float temps_cycle();
+Usine * ws_precedences(Graphe* g, float temps_cycle);
+
+
+

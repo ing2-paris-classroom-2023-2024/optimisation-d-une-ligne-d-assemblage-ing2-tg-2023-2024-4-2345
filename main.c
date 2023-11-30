@@ -1,6 +1,7 @@
-// Fonction pour obtenir l'indice du sommet dans le tableau pSommet de Graphe
 #include "header.h"
 
+
+// Fonction pour obtenir l'indice du sommet dans le tableau pSommet de Graphe
 int obtenirIndiceSommet(Graphe *graphe, int valeurSommet){
     int indice = -1;
     for (int i = 0; i < graphe->ordre; i++) {
@@ -15,14 +16,14 @@ int obtenirIndiceSommet(Graphe *graphe, int valeurSommet){
 void afficher_successeurs(Graphe* graphe, int num)
 {
     int i;
-    printf("\nsommet %d-%.2f \n", graphe->pSommet[num]->valeur, graphe->pSommet[num]->temps);
+    //printf("\nsommet %d-%.2f \n", graphe->pSommet[num]->valeur, graphe->pSommet[num]->temps);
 
     pArc arc = graphe->pSommet[num]->arc;
 
     while(arc!=NULL)
     {
         i = obtenirIndiceSommet(graphe, arc->sommet);
-        printf("%d-%.2f ",graphe->pSommet[i]->valeur, graphe->pSommet[i]->temps);
+        //printf("%d-%.2f ",graphe->pSommet[i]->valeur, graphe->pSommet[i]->temps);
         arc = arc->arc_suivant;
     }
 
@@ -178,6 +179,9 @@ Graphe * lire_graphe(char * nomFichier)
     return graphe;
 }
 
+
+
+/*affichage du graphe avec les successeurs de chaque sommet */
 void graphe_afficher(Graphe* graphe)
 {
     /*printf("graphe\n");
@@ -196,32 +200,117 @@ void graphe_afficher(Graphe* graphe)
         afficher_successeurs(graphe, i);
         printf("\n");
     }
-
 }
 
+
+/////////////////////////////////////////
+/// Algorithme BFS
+//////////////////////////////////////////
+int* BFS(Graphe* g, int sommet_initial, int couleur){
+    int num = 0;
+    int* liste;
+    int regarde = 0;
+    int j;
+    int vue;
+    pArc arc;
+
+    liste = (int*)malloc(g->ordre * sizeof(int));
+
+    for (int i = 0; i < g->ordre; ++i){
+        liste[i] = -1;
+    }
+
+    // Trouver quel sommet a pour valeur le sommet initial
+    num = obtenirIndiceSommet(g, sommet_initial);
+
+    liste[regarde] = g->pSommet[num]->valeur;
+
+
+    while (liste[regarde] != -1){
+        arc = g->pSommet[num]->arc;
+
+        while (arc != NULL) {
+            j = 0;
+            vue = 0;
+
+            // Parcourir la liste pour vérifier si le sommet lié y est déjà
+            while (liste[j] != -1){
+                if (liste[j] == arc->sommet){
+                    vue++;
+                    break;
+                }
+                j++;
+            }
+
+            // Si le sommet n'est pas dans la liste on le rajoute.
+            if (!vue){
+                liste[j] = arc->sommet;
+            }
+            arc = arc->arc_suivant;
+        }
+
+        regarde++;
+
+        // Trouver le sommet suivant dans la liste si il y en a un
+        if (liste[regarde] != -1){
+            num = 0;
+            while (g->pSommet[num]->valeur != liste[regarde]){
+                num++;
+            }
+        }
+    }
+
+    // Afficher la liste
+    for (int i = 0; i < g->ordre; ++i){
+        if (liste[i] != -1){
+            printf("%d ", liste[i]);
+            num = 0;
+            while ((g->pSommet[num]->valeur != liste[i]) && (num <= g->ordre)){
+                num++;
+            }
+            g->pSommet[num]->couleur = couleur;
+        }
+    }
+    printf("\n");
+    return liste;
+//    free(liste);
+}
+
+
 int main() {
+    // 2.1 - 1 Graphe d'exclusions
+    //g_exclusions = exclusions(g_exclusions);
 
     Graphe * g_exclusions;
-    Graphe * g_precedences;
 
-    //g_exclusions = exclusions(g_exclusions);
+    //// 2.1 - 2 Graphe de precedences
+
+    Graphe * g_precedences;
+    float temps_c;
+    Usine * ws;
+
+    // Creer le graphe de precedences
+    // Renseigner le temps de chaque operations
     g_precedences = precedences(g_precedences);
 
-    // repartition_2_1(g_exclusions);
-    //repartition_2_2(g_exclusions);
-    //on suprime la mémoire alloué dynamiquement
-    for (int i = 0; i < g_exclusions->ordre; ++i) {
+    // Lire le temps de cycle
+    temps_c = temps_cycle();
+
+    // Creer une Graphe Usine avec la liste des operations par Sommet
+    ws = ws_precedences(g_precedences, temps_c);
+
+    //on suprime la mémoire allouée dynamiquement
+    /*for (int i = 0; i < g_exclusions->ordre; ++i) {
         free(g_exclusions->pSommet[i]->arc);
         free(g_exclusions->pSommet[i]);
     }
     free(g_exclusions->pSommet);
-    free(g_precedences);
-    for (int i = 0; i < g_precedences->ordre; ++i) {
+    free(g_exclusions);
+    /*for (int i = 0; i < g_precedences->ordre; ++i) {
         free(g_precedences->pSommet[i]->arc);
         free(g_precedences->pSommet[i]);
     }
     free(g_precedences->pSommet);
-    free(g_precedences);
+    free(g_precedences);*/
     return 0;
 }
-
