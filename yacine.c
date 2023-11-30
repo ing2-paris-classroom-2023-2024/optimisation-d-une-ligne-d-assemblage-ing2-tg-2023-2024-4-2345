@@ -1,22 +1,40 @@
+//
+// Created by erelr on 30/11/2023.
+//
+
 #include "header.h"
 
+
+// Fonction pour obtenir l'indice du sommet dans le tableau pSommet de Graphe
+int obtenirIndiceSommet1(Graphe *graphe, int valeurSommet){
+    int indice = -1;
+    for (int i = 0; i < graphe->ordre; i++) {
+        if (graphe->pSommet[i]->valeur == valeurSommet) {
+            indice = i;
+        }
+    }
+    return indice;
+}
+
 /* affichage des successeurs du sommet num*/
-void afficher_successeurs(Graphe* graphe, int num)
+void afficher_successeurs1(Graphe* graphe, int num)
 {
-    printf(" sommet %d , couleur %d:\n", graphe->pSommet[num]->valeur, graphe->pSommet[num]->couleur);
+    int i;
+    //printf("\nsommet %d-%.2f \n", graphe->pSommet[num]->valeur, graphe->pSommet[num]->temps);
 
     pArc arc = graphe->pSommet[num]->arc;
 
     while(arc!=NULL)
     {
-        printf("%d ",arc->sommet);
+        i = obtenirIndiceSommet1(graphe, arc->sommet);
+        //printf("%d-%.2f ",graphe->pSommet[i]->valeur, graphe->pSommet[i]->temps);
         arc = arc->arc_suivant;
     }
 
 }
 
 ///Cette fonction remplace CreerArete car elle ne fonctionnais pas bien.
-void CreerLiaison(Graphe* graphe, int s1, int s2){
+void CreerLiaison1(Graphe* graphe, int s1, int s2){
     int i_s1 = -1;
     int i_s2 = -1;
 
@@ -54,16 +72,11 @@ void CreerLiaison(Graphe* graphe, int s1, int s2){
 // créer le graphe
 ///Le code a été changé de façon à régler le problème des numéro qui n'existe pas
 ///ou ce qui existe mais qui ont une valeur supérieur à celle de l'ordre du graphe
-Graphe* CreerGraphe(int ordre, int taille, int orientation, FILE * ifs, char * nomFichier){
+Graphe* CreerGraphe1(int ordre, int taille, int orientation, FILE * ifs, char * nomFichier){
     Graphe * Newgraphe = (Graphe*)malloc(sizeof(Graphe));
 
     //on réouvre le fichier
     ifs = fopen(nomFichier,"r");
-
-    ordre = taille_fichier("../exclusions.txt");
-    taille = taille_fichier("../exclusions.txt");
-    orientation = 0;
-
 
     Newgraphe->orientation = orientation;
     Newgraphe->ordre = ordre;
@@ -122,15 +135,15 @@ Graphe* CreerGraphe(int ordre, int taille, int orientation, FILE * ifs, char * n
         }
     }
     Newgraphe->ordre = j;
-
     fclose(ifs);
     return Newgraphe;
 }
 
 
+
 /* La construction du réseau peut se faire à partir d'un fichier dont le nom est passé en paramètre
 Le fichier contient : ordre, taille,orientation (0 ou 1)et liste des arcs */
-Graphe * lire_graphe(char * nomFichier)
+Graphe * lire_graphe1(char * nomFichier)
 {
     Graphe* graphe;
     FILE * ifs = fopen(nomFichier,"r");
@@ -142,10 +155,13 @@ Graphe * lire_graphe(char * nomFichier)
         exit(-1);
     }
 
-
     fclose(ifs);
 
-    graphe = CreerGraphe(ordre, taille, orientation, ifs , nomFichier); // créer le graphe d'ordre sommets avec les bons numéros
+    ordre = taille_fichier("../operations.txt");
+    taille = taille_fichier("../precedences.txt");
+    orientation = 1;
+
+    graphe = CreerGraphe1(ordre, taille, orientation, ifs , nomFichier); // créer le graphe d'ordre sommets avec les bons numéros
 
     /// on réouvre le fichier car il a totalement était lus puis fermé dans la fonction CreerGraphe
     ifs = fopen(nomFichier,"r");
@@ -156,14 +172,10 @@ Graphe * lire_graphe(char * nomFichier)
         exit(-1);
     }
 
-    ordre = taille_fichier("../exclusions.txt");
-    taille = taille_fichier("../exclusions.txt");
-    orientation = 0;
-
     // créer les arêtes du graphe
     for (int i=0; i<taille; ++i) {
         fscanf(ifs, "%d %d", &s1, &s2);
-        CreerLiaison(graphe, s1, s2);
+        CreerLiaison1(graphe, s1, s2);
 
     }
 
@@ -172,10 +184,11 @@ Graphe * lire_graphe(char * nomFichier)
 }
 
 
+
 /*affichage du graphe avec les successeurs de chaque sommet */
-void graphe_afficher(Graphe* graphe)
+void graphe_afficher1(Graphe* graphe)
 {
-    printf("graphe\n");
+    /*printf("graphe\n");
 
     if(graphe->orientation)
         printf("oriente\n");
@@ -184,68 +197,111 @@ void graphe_afficher(Graphe* graphe)
 
     printf("ordre = %d\n",graphe->ordre);
 
-    printf("listes d'exclusions :\n");
+    printf("successeurs :\n");*/
 
     for (int i = 0; i < graphe->ordre; i++)
     {
-        afficher_successeurs(graphe, i);
+        afficher_successeurs1(graphe, i);
         printf("\n");
     }
-
 }
 
 
-// Fonction pour obtenir l'indice du sommet dans le tableau pSommet de Graphe
-int obtenirIndiceSommet(Graphe *graphe, int valeurSommet){
-    for (int i = 0; i < graphe->ordre; i++) {
-        if (graphe->pSommet[i]->valeur == valeurSommet) {
-            return i;
+/////////////////////////////////////////
+/// Algorithme BFS
+//////////////////////////////////////////
+int* BFS(Graphe* g, int sommet_initial, int couleur){
+    int num = 0;
+    int* liste;
+    int regarde = 0;
+    int j;
+    int vue;
+    pArc arc;
+
+    liste = (int*)malloc(g->ordre * sizeof(int));
+
+    for (int i = 0; i < g->ordre; ++i){
+        liste[i] = -1;
+    }
+
+    // Trouver quel sommet a pour valeur le sommet initial
+    num = obtenirIndiceSommet1(g, sommet_initial);
+
+    liste[regarde] = g->pSommet[num]->valeur;
+
+
+    while (liste[regarde] != -1){
+        arc = g->pSommet[num]->arc;
+
+        while (arc != NULL) {
+            j = 0;
+            vue = 0;
+
+            // Parcourir la liste pour vérifier si le sommet lié y est déjà
+            while (liste[j] != -1){
+                if (liste[j] == arc->sommet){
+                    vue++;
+                    break;
+                }
+                j++;
+            }
+
+            // Si le sommet n'est pas dans la liste on le rajoute.
+            if (!vue){
+                liste[j] = arc->sommet;
+            }
+            arc = arc->arc_suivant;
         }
-    }
-}
 
-// Fonction pour vérifier si la couleur peut être utilisée pour un sommet donné
-int estCouleurValide(Graphe *graphe, int sommetIndex, int couleur){
-    pArc arc = graphe->pSommet[sommetIndex]->arc;
-    while (arc != NULL) {
-        int indiceVoisin = obtenirIndiceSommet(graphe, arc->sommet);
-        if (indiceVoisin != -1 && graphe->pSommet[indiceVoisin]->couleur == couleur) {
-            return 0;
-        }
-        arc = arc->arc_suivant;
-    }
-    return 1;
-}
+        regarde++;
 
-//  coloration de graphe avec naïve
-void ColorisationNaive(Graphe *graphe){
-
-    // Initialisation des couleurs à -1
-    for (int i = 0; i < graphe->ordre; i++) {
-        graphe->pSommet[i]->couleur = -1;
-    }
-
-    // Colorer chaque sommet
-    for (int i = 0; i < graphe->ordre; i++) {
-        int couleur;
-
-        for (couleur = 0; couleur < graphe->ordre; couleur++) {
-            if (estCouleurValide(graphe, i, couleur)) {
-                break;
+        // Trouver le sommet suivant dans la liste si il y en a un
+        if (liste[regarde] != -1){
+            num = 0;
+            while (g->pSommet[num]->valeur != liste[regarde]){
+                num++;
             }
         }
-        graphe->pSommet[i]->couleur = couleur;
-         }
+    }
+
+    // Afficher la liste
+    for (int i = 0; i < g->ordre; ++i){
+        if (liste[i] != -1){
+            printf("%d ", liste[i]);
+            num = 0;
+            while ((g->pSommet[num]->valeur != liste[i]) && (num <= g->ordre)){
+                num++;
+            }
+            g->pSommet[num]->couleur = couleur;
+        }
+    }
+    printf("\n");
+    return liste;
+//    free(liste);
 }
 
+int Yacine() {
 
-Graphe * exclusions(Graphe* g){
 
-    g = lire_graphe("../exclusions.txt");
+    Graphe * g_precedences;
+    float temps_c;
+    Usine * ws;
 
-    ColorisationNaive(g);
-    /// afficher le graphe
-    graphe_afficher(g);
+    // Creer le graphe de precedences
+    // Renseigner le temps de chaque operations
+    g_precedences = precedences(g_precedences);
 
-    return g;
-}//
+    // Lire le temps de cycle
+    temps_c = temps_cycle();
+
+    // Creer une Graphe Usine avec la liste des operations par Sommet
+    ws = ws_precedences(g_precedences, temps_c);
+
+    for (int i = 0; i < g_precedences->ordre; ++i) {
+        free(g_precedences->pSommet[i]->arc);
+        free(g_precedences->pSommet[i]);
+    }
+    free(g_precedences->pSommet);
+    free(g_precedences);
+    return 0;
+}

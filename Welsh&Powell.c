@@ -332,13 +332,14 @@ void ColorisationNaive(Graphe *graphe){
 }
 
 
-Graphe * exclusions(Graphe* g){
+Graphe * exclusions(Graphe* g) {
 
     g = lire_graphe("../exclusions.txt");
 
     ColorisationNaive(g);
     /// afficher le graphe
     graphe_afficher(g);
+}
 
 
 /*

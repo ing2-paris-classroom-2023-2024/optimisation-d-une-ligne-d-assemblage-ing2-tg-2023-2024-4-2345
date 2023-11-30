@@ -35,11 +35,11 @@ void renseigner_temps(Graphe * g) {
 
 Graphe * precedences(Graphe* g){
 
-    g = lire_graphe("../precedences.txt");
+    g = lire_graphe1("../precedences.txt");
     renseigner_temps(g);
     //ColorisationNaive(g);
     /// afficher le graphe
-    graphe_afficher(g);
+    graphe_afficher1(g);
 
     return g;
 }
@@ -51,16 +51,16 @@ Usine * ws_precedences(Graphe* g, float temps_cycle){
     liste = BFS(g, 1,1);
     i=0;
     k=1;
-    j= obtenirIndiceSommet(g, 1);
+    j= obtenirIndiceSommet1(g, 1);
     while ((liste[i] != -1) && (i < 20)){
         printf("\n\nWS %d", k);
         while (temps_c + g->pSommet[j]->temps <= temps_cycle){
-            j = obtenirIndiceSommet(g, liste[i]);
+            j = obtenirIndiceSommet1(g, liste[i]);
             printf("\n  %d-%.2f ", g->pSommet[j]->valeur, g->pSommet[j]->temps);
             temps_c = temps_c + g->pSommet[j]->temps;
             printf("\n temps de cycle %.2f ", temps_c);
             i++;
-            j = obtenirIndiceSommet(g, liste[i]);
+            j = obtenirIndiceSommet1(g, liste[i]);
         }
         temps_c = 0;
         k++;

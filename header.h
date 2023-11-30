@@ -52,13 +52,14 @@ typedef struct Usine{
 int taille_fichier(char* nomfichier);
 Graphe * exclusions(Graphe* g);
 Graphe * precedences(Graphe* g);
-int obtenirIndiceSommet(Graphe *graphe, int valeurSommet);
-Graphe * lire_graphe(char * nomFichier);
-void graphe_afficher(Graphe* graphe);
-void afficher_successeurs(Graphe* graphe, int sommet);
+int obtenirIndiceSommet1(Graphe *graphe, int valeurSommet);
+Graphe * lire_graphe1(char * nomFichier);
+void graphe_afficher1(Graphe* graphe);
+void afficher_successeurs1(Graphe* graphe, int sommet);
 int* BFS(Graphe* g, int sommet_initial, int couleur);
 float temps_cycle();
 Usine * ws_precedences(Graphe* g, float temps_cycle);
+int Yacine();
 
 
 
