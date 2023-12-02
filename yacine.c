@@ -1,9 +1,23 @@
+//
+// Created by erelr on 02/12/2023.
+//
+
 #include "header.h"
 
+
+// Fonction pour obtenir l'indice du sommet dans le tableau pSommet de Graphe
+int obtenirIndiceSommet1(Graphe *graphe, int valeurSommet){
+    for (int i = 0; i < graphe->ordre; i++) {
+        if (graphe->pSommet[i]->valeur == valeurSommet) {
+            return i;
+        }
+    }
+}
+
 /* affichage des successeurs du sommet num*/
-void afficher_successeurs(Graphe* graphe, int num)
+void afficher_successeurs1(Graphe* graphe, int num)
 {
-    printf(" sommet %d , couleur %d:\n", graphe->pSommet[num]->valeur, graphe->pSommet[num]->couleur);
+    printf("\nOperations : %d , WS %d:\n", graphe->pSommet[num]->valeur, graphe->pSommet[num]->couleur);
 
     pArc arc = graphe->pSommet[num]->arc;
 
@@ -12,11 +26,11 @@ void afficher_successeurs(Graphe* graphe, int num)
         printf("%d ",arc->sommet);
         arc = arc->arc_suivant;
     }
-
 }
 
+
 ///Cette fonction remplace CreerArete car elle ne fonctionnais pas bien.
-void CreerLiaison(Graphe* graphe, int s1, int s2){
+void CreerLiaison1(Graphe* graphe, int s1, int s2){
     int i_s1 = -1;
     int i_s2 = -1;
 
@@ -54,16 +68,11 @@ void CreerLiaison(Graphe* graphe, int s1, int s2){
 // créer le graphe
 ///Le code a été changé de façon à régler le problème des numéro qui n'existe pas
 ///ou ce qui existe mais qui ont une valeur supérieur à celle de l'ordre du graphe
-Graphe* CreerGraphe(int ordre, int taille, int orientation, FILE * ifs, char * nomFichier){
+Graphe* CreerGraphe1(int ordre, int taille, int orientation, FILE * ifs, char * nomFichier){
     Graphe * Newgraphe = (Graphe*)malloc(sizeof(Graphe));
 
     //on réouvre le fichier
     ifs = fopen(nomFichier,"r");
-
-    ordre = taille_fichier("../exclusions.txt");
-    taille = taille_fichier("../exclusions.txt");
-    orientation = 0;
-
 
     Newgraphe->orientation = orientation;
     Newgraphe->ordre = ordre;
@@ -122,19 +131,19 @@ Graphe* CreerGraphe(int ordre, int taille, int orientation, FILE * ifs, char * n
         }
     }
     Newgraphe->ordre = j;
-
     fclose(ifs);
     return Newgraphe;
 }
 
 
+
 /* La construction du réseau peut se faire à partir d'un fichier dont le nom est passé en paramètre
 Le fichier contient : ordre, taille,orientation (0 ou 1)et liste des arcs */
-Graphe * lire_graphe(char * nomFichier)
-{
+Graphe * lire_graphe1(char * nomFichier, int orientation){
+
     Graphe* graphe;
     FILE * ifs = fopen(nomFichier,"r");
-    int taille, orientation, ordre, s1, s2;
+    int taille, ordre, s1, s2;
 
     if (!ifs)
     {
@@ -142,10 +151,12 @@ Graphe * lire_graphe(char * nomFichier)
         exit(-1);
     }
 
-
     fclose(ifs);
 
-    graphe = CreerGraphe(ordre, taille, orientation, ifs , nomFichier); // créer le graphe d'ordre sommets avec les bons numéros
+    ordre = taille_fichier("../operations.txt");
+    taille = taille_fichier(nomFichier);
+
+    graphe = CreerGraphe1(ordre, taille, orientation, ifs , nomFichier); // créer le graphe d'ordre sommets avec les bons numéros
 
     /// on réouvre le fichier car il a totalement était lus puis fermé dans la fonction CreerGraphe
     ifs = fopen(nomFichier,"r");
@@ -156,14 +167,10 @@ Graphe * lire_graphe(char * nomFichier)
         exit(-1);
     }
 
-    ordre = taille_fichier("../exclusions.txt");
-    taille = taille_fichier("../exclusions.txt");
-    orientation = 0;
-
     // créer les arêtes du graphe
     for (int i=0; i<taille; ++i) {
         fscanf(ifs, "%d %d", &s1, &s2);
-        CreerLiaison(graphe, s1, s2);
+        CreerLiaison1(graphe, s1, s2);
 
     }
 
@@ -171,72 +178,141 @@ Graphe * lire_graphe(char * nomFichier)
     return graphe;
 }
 
-
 /*affichage du graphe avec les successeurs de chaque sommet */
-void graphe_afficher(Graphe* graphe)
+void graphe_afficher1(Graphe* graphe)
+
 {
-    printf("graphe\n");
+    //printf("graphe\n");
 
-    if(graphe->orientation)
-        printf("oriente\n");
-    else
-        printf("non oriente\n");
+    //if(graphe->orientation)
+    //    printf("oriente\n");
+    //else
+    //    printf("non oriente\n");
 
-    printf("ordre = %d\n",graphe->ordre);
+    //printf("ordre = %d\n",graphe->ordre);
 
-    printf("listes d'exclusions :\n");
+    //printf("successeurs :\n");
 
     for (int i = 0; i < graphe->ordre; i++)
     {
-        afficher_successeurs(graphe, i);
-        printf("\n");
+        afficher_successeurs1(graphe, i);
+        //printf("\n");
     }
-
 }
 
 
-// Fonction pour obtenir l'indice du sommet dans le tableau pSommet de Graphe
-int obtenirIndiceSommet(Graphe *graphe, int valeurSommet){
-    for (int i = 0; i < graphe->ordre; i++) {
-        if (graphe->pSommet[i]->valeur == valeurSommet) {
-            return i;
+/////////////////////////////////////////
+/// Algorithme BFS
+//////////////////////////////////////////
+int * BFS(Graphe* g, int sommet_initial, int couleur){
+    int num = 0;
+    int* liste;
+    int regarde = 0;
+    int j;
+    int vue;
+    pArc arc;
+
+    liste = (int*)malloc(g->ordre * sizeof(int));
+
+    for (int i = 0; i < g->ordre; ++i){
+        liste[i] = -1;
+    }
+
+    // Trouver quel sommet a pour valeur le sommet initial
+    num = obtenirIndiceSommet1(g, sommet_initial);
+
+    liste[regarde] = g->pSommet[num]->valeur;
+
+    while (liste[regarde] != -1){
+        arc = g->pSommet[num]->arc;
+
+        while (arc != NULL) {
+            j = 0;
+            vue = 0;
+
+            // Parcourir la liste pour vérifier si le sommet lié y est déjà
+            while (liste[j] != -1){
+                if (liste[j] == arc->sommet){
+                    vue++;
+                    break;
+                }
+                j++;
+            }
+
+            // Si le sommet n'est pas dans la liste on le rajoute.
+            if (!vue){
+                liste[j] = arc->sommet;
+            }
+            arc = arc->arc_suivant;
         }
-    }
-}
 
-// Fonction pour vérifier si la couleur peut être utilisée pour un sommet donné
-int estCouleurValide(Graphe *graphe, int sommetIndex, int couleur){
-    pArc arc = graphe->pSommet[sommetIndex]->arc;
-    while (arc != NULL) {
-        int indiceVoisin = obtenirIndiceSommet(graphe, arc->sommet);
-        if (indiceVoisin != -1 && graphe->pSommet[indiceVoisin]->couleur == couleur) {
-            return 0;
-        }
-        arc = arc->arc_suivant;
-    }
-    return 1;
-}
-//  coloration de graphe avec naïve
-void ColorisationNaive(Graphe *graphe){
-    // Initialisation des couleurs à -1
-    for (int i = 0; i < graphe->ordre; i++) {
-        graphe->pSommet[i]->couleur = -1;
-    }
-    // Colorer chaque sommet
-    for (int i = 0; i < graphe->ordre; i++) {
-        int couleur;
-        for (couleur = 0; couleur < graphe->ordre; couleur++) {
-            if (estCouleurValide(graphe, i, couleur)) {
-                break;
+        regarde++;
+
+        // Trouver le sommet suivant dans la liste si il y en a un
+        if (liste[regarde] != -1){
+            num = 0;
+            while (g->pSommet[num]->valeur != liste[regarde]){
+                num++;
             }
         }
-        graphe->pSommet[i]->couleur = couleur;
+    }
+
+    // Afficher la liste
+    printf("Ensemble connexe : ");
+    for (int i = 0; i < g->ordre; ++i){
+        if (liste[i] != -1){
+            printf("%d ", liste[i]);
+            num = 0;
+            while ((g->pSommet[num]->valeur != liste[i]) && (num <= g->ordre)){
+                num++;
+            }
+            g->pSommet[num]->couleur = couleur;
+        }
+    }
+    printf("\n");
+
+    return liste;
+}
+
+void connexes_afficher1(Graphe* graphe, char BFSorDFS) {
+
+    int indice_connexe = 0;
+    int s0 = 0;
+    int *liste;
+    // Initialiser le champ connexe
+    for (int i=0; i<graphe->ordre; i++) {
+        graphe->pSommet[i]->couleur = 0;
+    }
+    indice_connexe = 1;
+    // On cherche la 1ere liste connexe
+    if (BFSorDFS == 'B') {
+        printf("Connexe 1 : ");
+        BFS(graphe, 1,1);
+
+        // On cherche les listes connexes suivantes dans les cellules ou connexe est reste a 0 ie non visitées
+        for (int i=0; i<graphe->ordre; i++) {
+            if (graphe->pSommet[i]->couleur==0) {
+                indice_connexe++;
+                printf("Connexe %d : ", indice_connexe);
+                BFS(graphe, graphe->pSommet[i]->valeur,indice_connexe);
+            }
+        }
+    } else {
+        printf("DFS Connexe 1 : ");
+        //DFS_NEW(graphe, s0,1);
     }
 }
-Graphe * exclusions(Graphe* g){
-    g = lire_graphe("../exclusions.txt");
-    ColorisationNaive(g);
-    /// afficher le graphe
-    graphe_afficher(g);
-    return g;
-}//
+
+Graphe *yacine(Graphe *g){
+    WorkStation * ws;
+    float temps_c;
+
+    g = precedences(g);
+
+    // Lire le temps de cycle
+    temps_c = temps_cycle();
+    printf("\nTEMPS D'UN CYCLE : %.2f\n", temps_c);
+
+    // Creer une Graphe Usine avec la liste des operations par Sommet
+    ws = ws_precedences(g, temps_c);
+}

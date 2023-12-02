@@ -1,4 +1,4 @@
-# Install script for directory: C:/Users/yacin/CLionProjects/optimisation-d-une-ligne-d-assemblage-ing2-tg-2023-2024-4-2345
+# Install script for directory: C:/ECE/Inge_2/Theoreme_des_graphes/Projet_TDG/optimisation-d-une-ligne-d-assemblage-ing2-tg-2023-2024-4-2345
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -34,7 +34,7 @@ endif()
 
 # Set default install directory permissions.
 if(NOT DEFINED CMAKE_OBJDUMP)
-  set(CMAKE_OBJDUMP "C:/Users/yacin/Documents/ECE/Informatique/Allegro/MinGW avec Allegro 4/MinGW/bin/objdump.exe")
+  set(CMAKE_OBJDUMP "C:/Users/erelr/OneDrive/Documents/MinGW[1]/MinGW/bin/objdump.exe")
 endif()
 
 if(CMAKE_INSTALL_COMPONENT)
@@ -45,5 +45,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "C:/Users/yacin/CLionProjects/optimisation-d-une-ligne-d-assemblage-ing2-tg-2023-2024-4-2345/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "C:/ECE/Inge_2/Theoreme_des_graphes/Projet_TDG/optimisation-d-une-ligne-d-assemblage-ing2-tg-2023-2024-4-2345/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

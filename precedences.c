@@ -25,7 +25,7 @@ void renseigner_temps(Graphe * g) {
     //Recuperer les donnees de temps par sommet
     for (int i=0; i<g->ordre-1; i++) {
         fscanf(ifs, "%d %f", &sommet, &temps);
-        indice = obtenirIndiceSommet(g, sommet);
+        indice = obtenirIndiceSommet1(g, sommet);
         g->pSommet[indice]->temps = temps;
     }
     fclose(ifs);
@@ -33,7 +33,7 @@ void renseigner_temps(Graphe * g) {
 
 Graphe * precedences(Graphe* g){
 
-    g = lire_graphe("../precedences.txt", 1); // Graphe oriente
+    g = lire_graphe1("../precedences.txt", 1); // Graphe oriente
     renseigner_temps(g);
     //ColorisationNaive(g);
     /// afficher le graphe
@@ -73,12 +73,12 @@ WorkStation * ws_precedences(Graphe* g, float temps_cycle){
     // A debugger : Erreur a partir de 18 24 28 + doublons 8 8 + il faut passer a WS2
     for (int l=0; l < g->ordre; l++) {
         for (k=0; k <= indice_connexe; k++) {
-            j = obtenirIndiceSommet(g, liste[k][l]);
+            j = obtenirIndiceSommet1(g, liste[k][l]);
             if ((liste[k][l] != -1) && (ws[ws_num].temps + g->pSommet[j]->temps < temps_cycle)){
                 ws[ws_num].temps = ws[ws_num].temps + g->pSommet[j]->temps;
                 ws[ws_num].operations[ops_num] = liste[k][l];
                 printf(" \n WS%d %d %.2f", ws[ws_num].num, ws[ws_num].operations[ops_num], ws[ws_num].temps);
-                j = obtenirIndiceSommet(g, liste[k][l]);
+                j = obtenirIndiceSommet1(g, liste[k][l]);
                 ops_num++;
             }
             if (ws[ws_num].temps > temps_cycle){

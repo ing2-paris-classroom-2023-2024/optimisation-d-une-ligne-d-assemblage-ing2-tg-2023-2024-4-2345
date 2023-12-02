@@ -58,12 +58,13 @@ typedef struct WorkStation{
 
 int taille_fichier(char* nomfichier);
 Graphe * exclusions(Graphe* g);
-int obtenirIndiceSommet(Graphe *graphe, int valeurSommet);
-void afficher_successeurs(Graphe* graphe, int num);
-Graphe * lire_graphe(char * nomFichier, int orientation);
-void graphe_afficher(Graphe* graphe);
+int obtenirIndiceSommet1(Graphe *graphe, int valeurSommet);
+void afficher_successeurs1(Graphe* graphe, int num);
+Graphe * lire_graphe1(char * nomFichier, int orientation);
+void graphe_afficher1(Graphe* graphe);
 Graphe * precedences(Graphe* g);
 float temps_cycle();
 int* BFS(Graphe* g, int sommet_initial, int couleur);
 void connexes_afficher(Graphe* graphe, char BFSorDFS);
 WorkStation * ws_precedences(Graphe* g, float temps_cycle);
+Graphe *yacine(Graphe *g);

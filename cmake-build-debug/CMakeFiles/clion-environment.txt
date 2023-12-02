@@ -1,4 +1,4 @@
-ToolSet: 5.0 (local)@C:\Users\yacin\Documents\ECE\Informatique\Allegro\MinGW avec Allegro 4\MinGW
+ToolSet: w64 6.0 (local)@C:\Users\erelr\OneDrive\Documents\MinGW[1]\MinGW
 Options: 
 
-Options:
+Options:-DCMAKE_MAKE_PROGRAM=C:/Program Files/JetBrains/CLion 2022.2.3/bin/ninja/win/ninja.exe
