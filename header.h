@@ -25,6 +25,7 @@ struct Sommet
     int valeur;
     float temps;
     int couleur;
+
 };
 
 /* Alias de pointeur sur un Sommet */
@@ -47,19 +48,22 @@ typedef struct Usine{
     struct Usine* Usine_suivante;
 } Usine;
 
+typedef struct WorkStation{
+    int num;
+    float temps;
+    int * operations;
+} WorkStation;
+
 ///Ajout des fonction pour les utiliser dans les autres fichier.
 
 int taille_fichier(char* nomfichier);
 Graphe * exclusions(Graphe* g);
+int obtenirIndiceSommet(Graphe *graphe, int valeurSommet);
+void afficher_successeurs(Graphe* graphe, int num);
+Graphe * lire_graphe(char * nomFichier, int orientation);
+void graphe_afficher(Graphe* graphe);
 Graphe * precedences(Graphe* g);
-int obtenirIndiceSommet1(Graphe *graphe, int valeurSommet);
-Graphe * lire_graphe1(char * nomFichier);
-void graphe_afficher1(Graphe* graphe);
-void afficher_successeurs1(Graphe* graphe, int sommet);
-int* BFS(Graphe* g, int sommet_initial, int couleur);
 float temps_cycle();
-Usine * ws_precedences(Graphe* g, float temps_cycle);
-int Yacine();
-
-
-
+int* BFS(Graphe* g, int sommet_initial, int couleur);
+void connexes_afficher(Graphe* graphe, char BFSorDFS);
+WorkStation * ws_precedences(Graphe* g, float temps_cycle);

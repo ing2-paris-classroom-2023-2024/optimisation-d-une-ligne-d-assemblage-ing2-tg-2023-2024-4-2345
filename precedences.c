@@ -1,5 +1,3 @@
-
-
 #include "header.h"
 
 float temps_cycle() {
@@ -35,34 +33,61 @@ void renseigner_temps(Graphe * g) {
 
 Graphe * precedences(Graphe* g){
 
-    g = lire_graphe1("../precedences.txt");
+    g = lire_graphe("../precedences.txt", 1); // Graphe oriente
     renseigner_temps(g);
     //ColorisationNaive(g);
     /// afficher le graphe
-    graphe_afficher1(g);
+    //graphe_afficher(g);
 
     return g;
 }
 
-Usine * ws_precedences(Graphe* g, float temps_cycle){
-    int * liste;
-    int i,j,k;
+WorkStation * ws_precedences(Graphe* g, float temps_cycle){
+    int **liste = (int **)malloc(g->ordre * sizeof(int *));
+    for (int i = 0; i < g->ordre; i++) {
+        liste[i] = (int *)malloc(g->ordre * sizeof(int));
+    }
+    WorkStation * ws = (WorkStation *)malloc (g->ordre * sizeof(WorkStation));   // Liste des station de travail
+    ws->operations = (int *)malloc(g->ordre * sizeof(int));
+    int i,j,k,ws_num,ops_num;
+    int indice_connexe = 0;
     float temps_c = 0;
-    liste = BFS(g, 1,1);
-    i=0;
-    k=1;
-    j= obtenirIndiceSommet1(g, 1);
-    while ((liste[i] != -1) && (i < 20)){
-        printf("\n\nWS %d", k);
-        while (temps_c + g->pSommet[j]->temps <= temps_cycle){
-            j = obtenirIndiceSommet1(g, liste[i]);
-            printf("\n  %d-%.2f ", g->pSommet[j]->valeur, g->pSommet[j]->temps);
-            temps_c = temps_c + g->pSommet[j]->temps;
-            printf("\n temps de cycle %.2f ", temps_c);
-            i++;
-            j = obtenirIndiceSommet1(g, liste[i]);
+
+    //connexes_afficher(g,'B');
+
+    liste[0] = BFS(g, 1,1);
+
+    // On cherche les listes connexes suivantes dans les cellules ou connexe est reste a 0 ie non visitées
+    for (int l=0; l < g->ordre; l++) {
+        if (g->pSommet[l]->couleur==0) {
+            indice_connexe++;
+            liste[indice_connexe] = BFS(g, g->pSommet[l]->valeur,indice_connexe);
         }
-        temps_c = 0;
-        k++;
+    }
+
+    ws_num = 0;
+    ws[ws_num].num = ws_num;
+    ws[ws_num].temps = 0;
+    ops_num = 0;
+
+    // A debugger : Erreur a partir de 18 24 28 + doublons 8 8 + il faut passer a WS2
+    for (int l=0; l < g->ordre; l++) {
+        for (k=0; k <= indice_connexe; k++) {
+            j = obtenirIndiceSommet(g, liste[k][l]);
+            if ((liste[k][l] != -1) && (ws[ws_num].temps + g->pSommet[j]->temps < temps_cycle)){
+                ws[ws_num].temps = ws[ws_num].temps + g->pSommet[j]->temps;
+                ws[ws_num].operations[ops_num] = liste[k][l];
+                printf(" \n WS%d %d %.2f", ws[ws_num].num, ws[ws_num].operations[ops_num], ws[ws_num].temps);
+                j = obtenirIndiceSommet(g, liste[k][l]);
+                ops_num++;
+            }
+            if (ws[ws_num].temps > temps_cycle){
+                //ws_num = 1;
+                //ws[ws_num].num = ws_num+1;
+                //ws[ws_num].temps = 0;
+                //ops_num = 0;
+                //printf(" \n WS %d %d %.2f", ws[ws_num].num, ws[ws_num].operations[ops_num], ws[ws_num].temps);
+            }
+        }
     }
 }
