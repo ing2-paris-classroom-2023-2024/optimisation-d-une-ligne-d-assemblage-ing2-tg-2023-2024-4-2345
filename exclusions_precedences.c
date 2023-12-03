@@ -1,12 +1,10 @@
-//
-// Created by erelr on 02/12/2023.
-//
+/// PRISE EN COMPTE EXCLUSION ET PRECEDENCE
 #include "header.h"
 
 /* affichage des successeurs du sommet num*/
 void afficher_successeurs2(Graphe* graphe, int num)
 {
-    printf(" sommet %d , usine %d:\n", graphe->pSommet[num]->valeur, graphe->pSommet[num]->couleur);
+    printf(" WS%d %d\n", graphe->pSommet[num]->couleur, graphe->pSommet[num]->valeur);
 }
 
 ///Cette fonction remplace CreerArete car elle ne fonctionnais pas bien.
@@ -167,18 +165,29 @@ Graphe * lire_graphe2(char * nomFichier)
 
 
 /*affichage du graphe avec les successeurs de chaque sommet */
-void graphe_afficher2(Graphe* graphe)
-{
+void graphe_afficher2(Graphe* graphe) {
 
-
-    printf("usine des points :\n");
-
-    for (int i = 0; i < graphe->ordre; i++)
-    {
-        afficher_successeurs2(graphe, i);
-        printf("\n");
+    int **liste = (int **) malloc(graphe->ordre * sizeof(int *));
+    for (int i = 0; i < graphe->ordre; i++) {
+        liste[i] = (int *) malloc(graphe->ordre * sizeof(int));
     }
 
+    printf("Repartition des operations par WorkStation :\n");
+
+    for (int k = 0; k < graphe->ordre; k++) {
+        for (int i = 0; i < graphe->ordre; i++){
+            liste[k][i] = -1;
+            liste[graphe->pSommet[i]->couleur][i] = graphe->pSommet[i]->valeur;
+        }
+    }
+
+    for (int k = 0; k < graphe->ordre; k++) {
+        for (int i = 0; i < graphe->ordre; i++){
+            if (liste[k][i] != -1) {
+                printf(" WS%d %d\n", graphe->pSommet[i]->couleur, graphe->pSommet[i]->valeur);
+            }
+        }
+    }
 }
 
 // Fonction pour obtenir l'indice du sommet dans le tableau pSommet de Graphe
@@ -257,7 +266,7 @@ int* listeIndicesParCouleur(Graphe *graphe) {
     return indices;
 }
 
-Graphe * exclusions_precendece(Graphe* g_exclusions){
+Graphe * exclusions_precendences(Graphe* g_exclusions){
     Graphe *g_precedences;
     int* indicesParCouleur;
     int couleur = 0;
@@ -275,7 +284,7 @@ Graphe * exclusions_precendece(Graphe* g_exclusions){
 
     // Exécute la recherche en profondeur (DFS) sur le graphe de précédence
     for (int i = 0; i < g_precedences->ordre; ++i) {
-            dfs(g_precedences, i);
+        dfs(g_precedences, i);
     }
 
     indicesParCouleur = listeIndicesParCouleur(g_precedences);

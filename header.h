@@ -1,3 +1,4 @@
+
 #ifndef HEADER_H_INCLUDED
 #define HEADER_H_INCLUDED
 
@@ -50,6 +51,7 @@ typedef struct Usine{
 
 typedef struct WorkStation{
     int num;
+    int nb_ws;
     float temps;
     int * operations;
 } WorkStation;
@@ -58,14 +60,14 @@ typedef struct WorkStation{
 
 int taille_fichier(char* nomfichier);
 Graphe * exclusions(Graphe* g);
-int obtenirIndiceSommet1(Graphe *graphe, int valeurSommet);
-void afficher_successeurs1(Graphe* graphe, int num);
-Graphe * lire_graphe1(char * nomFichier, int orientation);
-void graphe_afficher1(Graphe* graphe);
+int obtenirIndiceSommet(Graphe *graphe, int valeurSommet);
+void afficher_successeurs(Graphe* graphe, int num);
+Graphe * lire_graphe(char * nomFichier, int orientation);
+void graphe_afficher(Graphe* graphe);
 Graphe * precedences(Graphe* g);
 float temps_cycle();
 int* BFS(Graphe* g, int sommet_initial, int couleur);
 void connexes_afficher(Graphe* graphe, char BFSorDFS);
 WorkStation * ws_precedences(Graphe* g, float temps_cycle);
-Graphe *yacine(Graphe *g);
-Graphe * exclusions_precendece(Graphe* g_exclusions);
+//WorkStation * ws_multi_contraintes(WorkStation * ws, Graphe* g, Graphe* e, float temps_c);
+Graphe * exclusions_precendences(Graphe* g_exclusions);
