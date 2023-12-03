@@ -19,8 +19,9 @@ int main() {
     // Renseigner le temps de chaque operations
 
     printf("\n\n2.1.2 REPARTITION DES OPERATIONS EN PRENANT UNIQUEMENT EN COMPTE LES REGLES DE PRECEDENCE ET DE TEMPS \n");
-    //g_precedences = yacine(g_precedences);
+    g_precedences = yacine(g_precedences);
 
+    printf("\n\n2.2.1 REPARTITION DES OPERATIONS EN PRENANT UNIQUEMENT EN COMPTE LES RESTRICTIONS D4EXCLUSIONS ET DE PRECEDENCE \n");
     Graphe * g_exclusions_precedence;
     g_exclusions_precedence = exclusions_precendece(g_exclusions);
 

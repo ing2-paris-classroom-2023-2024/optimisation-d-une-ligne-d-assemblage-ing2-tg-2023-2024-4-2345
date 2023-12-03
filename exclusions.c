@@ -175,16 +175,7 @@ Graphe * lire_graphe(char * nomFichier)
 /*affichage du graphe avec les successeurs de chaque sommet */
 void graphe_afficher(Graphe* graphe)
 {
-    printf("graphe\n");
-
-    if(graphe->orientation)
-        printf("oriente\n");
-    else
-        printf("non oriente\n");
-
-    printf("ordre = %d\n",graphe->ordre);
-
-    printf("listes d'exclusions :\n");
+    printf("usine des points :\n");
 
     for (int i = 0; i < graphe->ordre; i++)
     {
