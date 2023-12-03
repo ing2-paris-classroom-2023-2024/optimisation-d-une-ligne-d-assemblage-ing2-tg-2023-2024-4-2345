@@ -340,9 +340,9 @@ int main() {
 
     //// 2.2 - 2 Graphe prenant en compte precedences et exclusions
 
-    printf("\n\n2.2 REPARTITION DES OPERATIONS EN PRENANT EN COMPTE LES REGLES D'EXCLUSION ET DE TEMPS\n");
+    printf("\n\n2.2 REPARTITION DES OPERATIONS EN PRENANT EN COMPTE LES REGLES DE PRECEDENCES D'EXCLUSION ET DE TEMPS\n");
 
-    //wse = ws_multi_contraintes(ws, g_precedences, g_exclusions, temps_c);
+    ws = ws_multi_contraintes(ws, g_precedences, g_exclusions, temps_c);
 
     //on suprime la mémoire allouée dynamiquement
     for (int i = 0; i < g_exclusions->ordre; ++i) {

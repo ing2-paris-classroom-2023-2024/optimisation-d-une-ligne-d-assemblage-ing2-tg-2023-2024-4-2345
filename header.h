@@ -1,4 +1,3 @@
-
 #ifndef HEADER_H_INCLUDED
 #define HEADER_H_INCLUDED
 
@@ -69,5 +68,5 @@ float temps_cycle();
 int* BFS(Graphe* g, int sommet_initial, int couleur);
 void connexes_afficher(Graphe* graphe, char BFSorDFS);
 WorkStation * ws_precedences(Graphe* g, float temps_cycle);
-//WorkStation * ws_multi_contraintes(WorkStation * ws, Graphe* g, Graphe* e, float temps_c);
+WorkStation * ws_multi_contraintes(WorkStation * ws, Graphe* g, Graphe* e, float temps_c);
 Graphe * exclusions_precendences(Graphe* g_exclusions);
