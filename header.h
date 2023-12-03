@@ -68,3 +68,4 @@ int* BFS(Graphe* g, int sommet_initial, int couleur);
 void connexes_afficher(Graphe* graphe, char BFSorDFS);
 WorkStation * ws_precedences(Graphe* g, float temps_cycle);
 Graphe *yacine(Graphe *g);
+Graphe * exclusions_precendece(Graphe* g_exclusions);
